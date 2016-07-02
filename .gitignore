@@ -14,7 +14,6 @@ gen/
 out/
 
 # Gradle files
-*gradle*
 .gradle/
 build/
 /*/build/
@@ -36,7 +35,6 @@ captures/
 
 # Android Studio
 .idea/libraries/
-.idea/runConfigurations.xml
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/.name
@@ -47,7 +45,6 @@ captures/
 .idea/modules.xml
 .idea/scopes/scope_settings.xml
 .idea/vcs.xml
-*.iml
 
 # Keystore files
 *.jks
