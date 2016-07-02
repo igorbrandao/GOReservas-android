@@ -3,6 +3,7 @@ package br.ufg.inf.goreservas.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -27,13 +28,18 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import br.ufg.inf.goreservas.R;
+import br.ufg.inf.goreservas.remotedb.UserDAO;
 import br.ufg.inf.goreservas.utils.Hashing;
+import br.ufg.inf.goreservas.utils.JavaPromise;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -57,7 +63,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -148,9 +153,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
         mEmailView.setError(null);
@@ -200,8 +202,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            UserDAO userDao = UserDAO.getInstance(this);
+            userDao.authenticateUser(email, password, new JavaPromise() {
+                @Override
+                public void onSuccess(JSONObject response) {
+                    try {
+                        if (response.getBoolean("success")){
+                            System.out.println("Authenticated");
+                        }
+                        else{
+                            System.out.println("Not Authenticated");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onError(String error) {
+                    System.out.println("Error");
+                }
+            });
+
         }
     }
 
@@ -308,62 +330,5 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-
-            Hashing hashing = new Hashing();
-
-            try {
-                // TODO: attempt authentication against a network service.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    try {
-                        return pieces[1].equals(hashing.encryptPassword(mPassword));
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-            } else {
-                signInButton.setError(getString(R.string.error_incorrect_login));
-                signInButton.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }
 }
 
