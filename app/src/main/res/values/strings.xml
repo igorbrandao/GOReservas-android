@@ -1,0 +1,45 @@
+<resources>
+    <!-- General Strings -->
+    <string name="app_name" translatable="false">GOReservas</string>
+
+    <!-- Strings related to login activity -->
+    <string name="title_activity_login">Login</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_register">Register</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_login">The informed email and/or password don\'t exist</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+
+    <!-- Strings related to registration activity -->
+    <string name="title_activity_registration">New account</string>
+    <string name="prompt_new_user_name">Full Name</string>
+    <string name="prompt_new_user_email">Email</string>
+    <string name="prompt_new_user_password">Choose a Password</string>
+    <string name="prompt_new_user_repeat_password">Repeat Chosen Password</string>
+    <string name="error_invalid_name">Please insert your full name</string>
+    <string name="error_email_taken">This email is already registered. Try another one please.</string>
+    <string name="error_passwords_mismatch">Typed passwords don\'t match</string>
+    <string name="account_creation_successful">Congratulations! You now have a GOReservas account. You
+        may login using the credentials you just registered.</string>
+    <string name="action_dismiss_and_login">Dismiss and Login</string>
+    <string name="action_new_account">Get Account</string>
+
+    <!-- Strings related to main activity -->
+    <string name="title_activity_main">Dashboard</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Strings related to error fragment -->
+    <string name="title_fragment_error">Something wrong happened… :(</string>
+    <string name="action_dismiss_error">Understood, just take me to a safe zone</string>
+    <string name="error_content">We apologize but the requested service is currently unavailable. Please try again later.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
