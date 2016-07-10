@@ -35,16 +35,23 @@ public class BusinessDAO {
     }
 
 
-    public void getAllBusiness(final JavaPromise promise){
+    public void getBestBusiness(final JavaPromise promise){
         remotedb.sendRequest(Request.Method.GET, path, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                promise.onSuccess(response);
+                try {
+                    if (response.getBoolean("success"))
+                        promise.onSuccess(response.getJSONObject("data"));
+                    else
+                        promise.onError(response.getString("reason"));
+                } catch (JSONException e) {
+                    promise.onError("error");
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                promise.onError(error.toString());
+                promise.onError("error");
             }
         });
     }
@@ -53,26 +60,40 @@ public class BusinessDAO {
         remotedb.sendRequest(Request.Method.GET, path + "/" + business, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                promise.onSuccess(response);
+                try {
+                    if (response.getBoolean("success"))
+                        promise.onSuccess(response.getJSONObject("data"));
+                    else
+                        promise.onError(response.getString("reason"));
+                } catch (JSONException e) {
+                    promise.onError("error");
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                promise.onError(error.toString());
+                promise.onError("error");
             }
         });
     }
 
-    public void searchBusiness(String client, String search, final JavaPromise promise){
-        remotedb.sendRequest(Request.Method.GET, path + "/" + client + "/" + search, null, new Response.Listener<JSONObject>() {
+    public void searchBusiness(String client, String search, String filter, final JavaPromise promise){
+        remotedb.sendRequest(Request.Method.GET, path + "/" + client + "/" + search + "/" + filter, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                promise.onSuccess(response);
+                try {
+                    if (response.getBoolean("success"))
+                        promise.onSuccess(response.getJSONObject("data"));
+                    else
+                        promise.onError(response.getString("reason"));
+                } catch (JSONException e) {
+                    promise.onError("error");
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                promise.onError(error.toString());
+                promise.onError("error");
             }
         });
     }
