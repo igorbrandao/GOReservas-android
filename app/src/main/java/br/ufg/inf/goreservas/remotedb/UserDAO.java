@@ -43,12 +43,19 @@ public class UserDAO {
         remotedb.sendRequest(Request.Method.POST, path, data, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                promise.onSuccess(response);
+                try {
+                    if (response.getBoolean("success"))
+                        promise.onSuccess(null);
+                    else
+                        promise.onError("wrong authentication");
+                } catch (JSONException e) {
+                    promise.onError("error");
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                promise.onError(error.toString());
+                promise.onError("error");
             }
         });
     }
@@ -64,12 +71,19 @@ public class UserDAO {
         remotedb.sendRequest(Request.Method.PUT, path, data, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                promise.onSuccess(response);
+                try {
+                    if (response.getBoolean("success"))
+                        promise.onSuccess(null);
+                    else
+                        promise.onError(response.getString("reason"));
+                } catch (JSONException e) {
+                    promise.onError("error");
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                promise.onError(error.toString());
+                promise.onError("error");
             }
         });
     }
@@ -84,12 +98,19 @@ public class UserDAO {
         remotedb.sendRequest(Request.Method.PUT, path + "/" + email, data, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                promise.onSuccess(response);
+                try {
+                    if (response.getBoolean("success"))
+                        promise.onSuccess(null);
+                    else
+                        promise.onError("error");
+                } catch (JSONException e) {
+                    promise.onError("error");
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                promise.onError(error.toString());
+                promise.onError("error");
             }
         });
     }
