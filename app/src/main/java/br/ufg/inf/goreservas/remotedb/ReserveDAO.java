@@ -53,31 +53,74 @@ public class ReserveDAO {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        remotedb.sendRequest(Request.Method.PUT, path, data, new Response.Listener<JSONObject>() {
+        remotedb.sendRequest(Request.Method.POST, path, data, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                promise.onSuccess(response);
+                try {
+                    if (response.getBoolean("success"))
+                        promise.onSuccess(response);
+                    else
+                        promise.onError(response.getString("reason"));
+                } catch (JSONException e) {
+                    promise.onError("error");
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                promise.onError(error.toString());
+                promise.onError("error");
+            }
+        });
+    }
+    public void rateReserve(String reserve,
+                              String business,
+                              int rating,
+                              final JavaPromise promise){
+        JSONObject data = new JSONObject();
+        try {
+            data.put("rating", rating);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        remotedb.sendRequest(Request.Method.POST, path + "/" + reserve + "/" + business, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if (response.getBoolean("success"))
+                        promise.onSuccess(null);
+                    else
+                        promise.onError(response.getString("reason"));
+                } catch (JSONException e) {
+                    promise.onError("error");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                promise.onError("error");
             }
         });
     }
 
-    public void deleteReserve(String reserveID,
+    public void deleteReserve(String reserveID, Date date,
                               final JavaPromise promise){
 
-        remotedb.sendRequest(Request.Method.DELETE, path + "/" + reserveID, null, new Response.Listener<JSONObject>() {
+        remotedb.sendRequest(Request.Method.DELETE, path + "/" + reserveID + "/" + date.getTime(), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                promise.onSuccess(response);
+                try {
+                    if (response.getBoolean("success"))
+                        promise.onSuccess(null);
+                    else
+                        promise.onError(response.getString("reason"));
+                } catch (JSONException e) {
+                    promise.onError("error");
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                promise.onError(error.toString());
+                promise.onError("error");
             }
         });
     }
@@ -88,12 +131,65 @@ public class ReserveDAO {
         remotedb.sendRequest(Request.Method.GET, path + "/" + client, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                promise.onSuccess(response);
+                try {
+                    if (response.getBoolean("success"))
+                        promise.onSuccess(response.getJSONObject("data"));
+                    else
+                        promise.onError(response.getString("reason"));
+                } catch (JSONException e) {
+                    promise.onError("error");
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                promise.onError(error.toString());
+                promise.onError("error");
+            }
+        });
+    }
+
+    public void getOneReserve(String id, String client,
+                            final JavaPromise promise){
+
+        remotedb.sendRequest(Request.Method.GET, path + "/" + id + "/" + client, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if (response.getBoolean("success"))
+                        promise.onSuccess(response.getJSONObject("data"));
+                    else
+                        promise.onError(response.getString("reason"));
+                } catch (JSONException e) {
+                    promise.onError("error");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                promise.onError("error");
+            }
+        });
+    }
+
+    public void getLastReserves(String client,
+                              final JavaPromise promise){
+
+        remotedb.sendRequest(Request.Method.PUT, path + "/" + client, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if (response.getBoolean("success"))
+                        promise.onSuccess(response.getJSONObject("data"));
+                    else
+                        promise.onError(response.getString("reason"));
+                } catch (JSONException e) {
+                    promise.onError("error");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                promise.onError("error");
             }
         });
     }
